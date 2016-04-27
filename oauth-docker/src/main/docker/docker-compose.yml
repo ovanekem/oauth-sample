@@ -1,0 +1,10 @@
+version: '2'
+services:
+    oauth-app:
+      build: ./image-app
+      ports:
+        - "80:8080"
+        - "9990:9990"
+        - "8787:8787"
+
+
