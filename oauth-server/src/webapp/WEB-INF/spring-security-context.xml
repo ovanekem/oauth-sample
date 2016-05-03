@@ -62,13 +62,13 @@
 
     <oauth:client-details-service id="clientDetailsService">
         <oauth:client
-                client-id="frontend" secret="app1"
+                client-id="frontend" secret="be.knoware.app2"
                 authorized-grant-types="password,refresh_token"
                 authorities="ROLE_APP1"
                 scope="read, write"
         />
         <oauth:client
-                client-id="frontend" secret="app2"
+                client-id="frontend" secret="be.knoware.app2"
                 authorized-grant-types="password,refresh_token"
                 authorities="ROLE_APP2"
                 scope="read, write"

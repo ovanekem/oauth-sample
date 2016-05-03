@@ -20,7 +20,7 @@ public class App2Controller {
     public Calc sum(@PathVariable int a, @PathVariable int b) {
         // complex business logic ;-)
         Calc calc = new Calc(a, b);
-        calc.minA();
+        calc.minAandB();
         return calc;
     }
 }

@@ -34,8 +34,6 @@ public class AuthorizationServer {
     @EnableAuthorizationServer
     public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-        @Autowired
-        private Environment env;
 
         @Autowired
         @Qualifier("authenticationManagerBean")
@@ -50,28 +48,20 @@ public class AuthorizationServer {
         public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {// @formatter:off
             clients
                     .inMemory()
-                    .withClient("app1")
-                    .authorizedGrantTypes("implicit")
-                    .scopes("read", "write")
-                    .autoApprove(false)
-                    .accessTokenValiditySeconds(3600)
-
-                    .and()
-                    .withClient("app2")
+                    .withClient("web1")
                     .secret("password")
                     .authorizedGrantTypes("password", "authorization_code", "refresh_token")
-                    .scopes("read", "write")
+                    .scopes("sum", "min")
                     .accessTokenValiditySeconds(3600)
-                    .refreshTokenValiditySeconds(2592000)
+                    .refreshTokenValiditySeconds(259200)
 
                     .and()
-                    .withClient("app3")
+                    .withClient("web2")
                     .secret("password")
                     .authorizedGrantTypes("password", "authorization_code", "refresh_token")
-                    .scopes("read")
+                    .scopes("sum")
                     .accessTokenValiditySeconds(3600)
-                    .refreshTokenValiditySeconds(2592000)
-            ;
+                    .refreshTokenValiditySeconds(259200);
         }
 
         @Override

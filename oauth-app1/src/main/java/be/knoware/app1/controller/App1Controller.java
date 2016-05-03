@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class App1Controller {
 
     @PreAuthorize("#oauth2.hasScope('sum')")
-    @RequestMapping(method = RequestMethod.GET, value = "/app1/{a}/{b}")
+    @RequestMapping(method = RequestMethod.GET, value = "/sum/{a}/{b}")
     @ResponseBody
     public Calc sum(@PathVariable int a, @PathVariable int b) {
         // complex business logic ;-)
