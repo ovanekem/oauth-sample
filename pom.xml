@@ -11,6 +11,7 @@
     <modules>
         <module>oauth-server</module>
         <module>oauth-docker</module>
+        <module>oauth-app1</module>
     </modules>
     <properties>
         <java.version>1.7</java.version>
