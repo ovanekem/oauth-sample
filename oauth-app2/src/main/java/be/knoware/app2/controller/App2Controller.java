@@ -1,6 +1,7 @@
-package be.knoware.app1.controller;
+package be.knoware.app2.controller;
 
-import be.knoware.app1.model.Calc;
+import be.knoware.app2.model.Calc;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,13 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class App2Controller {
 
-    //@PreAuthorize("#oauth2.hasScope('sum')")
-    @RequestMapping(method = RequestMethod.GET, value = "/app2/{a}/{b}")
+    @PreAuthorize("#oauth2.hasScope('min')")
+    @RequestMapping(method = RequestMethod.GET, value = "/min/{a}/{b}")
     @ResponseBody
     public Calc sum(@PathVariable int a, @PathVariable int b) {
         // complex business logic ;-)
         Calc calc = new Calc(a, b);
-        calc.sumAandB();
+        calc.minA();
         return calc;
     }
 }
