@@ -17,6 +17,6 @@ public class ResourceServerApplication extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(be.knoware.app2.config.ResourceServerApplication.class, args);
+        SpringApplication.run(ResourceServerApplication.class, args);
     }
 }
