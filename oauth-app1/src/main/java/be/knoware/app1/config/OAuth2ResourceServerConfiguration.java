@@ -1,5 +1,5 @@
 package be.knoware.app1.config;
-
+/*
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -11,11 +11,11 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
-
+*/
 /**
  * Created by ovanekem on 03/05/16.
  */
-@Configuration
+/*@Configuration
 @EnableResourceServer
 public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
@@ -43,4 +43,4 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
     public TokenStore tokenStore() {
         return new InMemoryTokenStore();
     }
-}
+}*/

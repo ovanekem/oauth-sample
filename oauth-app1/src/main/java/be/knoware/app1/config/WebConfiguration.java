@@ -11,9 +11,5 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 @EnableWebMvc
 @ComponentScan("be.knoware.app1.controller")
-public class WebConfiguration {
-
-
-    public class ResourceServerWebConfig extends WebMvcConfigurerAdapter {
-    }
+public class WebConfiguration  extends WebMvcConfigurerAdapter {
 }

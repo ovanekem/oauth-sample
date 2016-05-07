@@ -117,19 +117,18 @@
         });
     });
     function enableSumButton(flag) {
-        $("#btn-sum").prop("disabled", flag);
+        $("#btn-sum").prop("enabled", flag);
     }
     function enableMinButton(flag) {
-        $("#btn-min").prop("disabled", flag);
+        $("#btn-min").prop("enabled", flag);
     }
     function sumApp1() {
-        var url = 'http://localhost:8081/app1/sum/' + $('#sum1').val() + '/' + $('#sum2').val();
+        var url = '/oauth-app1/sum/' + $('#sum1').val() + '/' + $('#sum2').val();
 
         $.ajax({
             type: 'GET',
             contentType: 'application/json',
             async: false,
-            datatype: 'jsonp',
             url: url
 
         }).done(function (data) {
@@ -147,20 +146,19 @@
             }
         });
     }
-    function minApp1() {
-        var url = 'http://localhost:8082/app2/min/' + $('#min1').val() + '/' + $('#min2').val();
+    function minApp2() {
+        var url = '/oauth-app2/min/' + $('#min1').val() + '/' + $('#min2').val();
 
         $.ajax({
             type: 'GET',
             contentType: 'application/json',
             async: false,
-            datatype: 'jsonp',
             url: url
 
         }).done(function (data) {
             console.log("SUCCESS: ", data);
             display(data);
-            enableSumButton(true);
+            enableMinButton(true);
         }).fail(function (jqXHR, textStatus, errorThrown) {
             if (jqXHR.status === 401) { // HTTP Status 401: Unauthorized
                 var preLoginInfo = JSON.stringify({method: 'GET', url: '/'});
@@ -175,7 +173,7 @@
     function display(data) {
         var json = "<h4>Ajax Response</h4><pre>"
                 + JSON.stringify(data, null, 4) + "</pre>";
-        $('#feedback').html(json);
+        $('#result').html(json);
     }
 
     function toggleApp1() {

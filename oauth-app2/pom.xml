@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>oauth-app2</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <properties>
         <start-class>be.knoware.app2.config.ResourceServerApplication</start-class>
     </properties>
@@ -28,6 +28,18 @@
             </exclusions>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-websocket</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -36,11 +48,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
@@ -59,7 +66,7 @@
     </dependencies>
 
     <build>
-        <finalName>oauth-be.knoware.app2</finalName>
+        <finalName>oauth-app2</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
