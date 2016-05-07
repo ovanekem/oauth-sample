@@ -29,8 +29,8 @@ public class WebSecurityConfiguration {
 
         @Override
         protected void configure(final HttpSecurity http) throws Exception {
-            http.authorizeRequests().antMatchers("/login").permitAll()
-                    .anyRequest().authenticated().and().formLogin().permitAll();
+            http.authorizeRequests().antMatchers("/login").permitAll();
+            http.formLogin();
         }
     }
 }

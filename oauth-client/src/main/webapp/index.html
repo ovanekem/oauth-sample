@@ -23,9 +23,37 @@
         <p>
             <a class="btn btn-default" href="#" role="button" onclick="toggleApp1();">Sum it !</a>
             <a class="btn btn-default" href="#" role="button" onclick="toggleApp2();">Min it !</a>
+            <a class="btn btn-default" href="#" role="button" onclick="toggleLogin();">Login !</a>
 
         </p>
     </div>
+</div>
+
+<div id="loginForm" class="container">
+    <h2>Login</h2>
+    <br>
+    <form class="form-horizontal" id="login-form">
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">User name</label>
+            <div class="col-sm-10">
+                <input type=text class="form-control" id="username">
+            </div>
+        </div>
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-10">
+                <input type=password class="form-control" id="password">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="btn-login"
+                        class="btn btn-primary btn-lg">Login !
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <div id="app1Form" class="container">
@@ -95,6 +123,7 @@
     $(document).ready(function () {
         $("#app1Form").hide();
         $("#app2Form").hide();
+        $("#loginForm").hide();
 
         $("#app1Form").submit(function (event) {
             enableSumButton(false);
@@ -115,9 +144,18 @@
             minApp2();
 
         });
+        $("#loginForm").submit(function (event) {
+            enableLoginButton(false);
+            event.preventDefault();
+
+            login();
+        })
     });
     function enableSumButton(flag) {
         $("#btn-sum").prop("enabled", flag);
+    }
+    function enableLoginButton(flag) {
+        $("#btn-login").prop("enabled", flag);
     }
     function enableMinButton(flag) {
         $("#btn-min").prop("enabled", flag);
@@ -159,17 +197,37 @@
             console.log("SUCCESS: ", data);
             display(data);
             enableMinButton(true);
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            if (jqXHR.status === 401) { // HTTP Status 401: Unauthorized
-                var preLoginInfo = JSON.stringify({method: 'GET', url: '/'});
-                $.cookie('restsecurity.pre.login.request', preLoginInfo);
-                window.location = '/login.html';
+        }).fail(function (xhr) {
+            if (xhr.status === 401) { // HTTP Status 401: Unauthorized
+                alert("You should login first...");
 
             } else {
-                alert('Houston, we have a problem...');
+                alert('Error, bad HTTP error code returned: ' + xhr.status);
             }
         });
     }
+
+    function login() {
+
+        var url = "/oauth-server/login";
+        var data = 'username=' + $('#username').val() + '&password=' + $('#password').val();
+        $.ajax({
+            data: data,
+            timeout: 1000,
+            type: 'POST',
+            url: url
+
+        }).done(function(data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+            enableLoginButton(true);
+
+        }).fail(function(xhr) {
+            alert("Wrong username of password");
+            console.error('Wrong username of password (' + xhr.status + ')');
+        });
+    }
+
     function display(data) {
         var json = "<h4>Ajax Response</h4><pre>"
                 + JSON.stringify(data, null, 4) + "</pre>";
@@ -179,12 +237,18 @@
     function toggleApp1() {
         $("#app1Form").show();
         $("#app2Form").hide();
+        $("#loginForm").hide();
     }
     function toggleApp2() {
         $("#app2Form").show();
         $("#app1Form").hide();
+        $("#loginForm").hide();
     }
-
+    function toggleLogin() {
+        $("#app2Form").hide();
+        $("#app1Form").hide();
+        $("#loginForm").show();
+    }
 </script>
 
 </body>
