@@ -24,6 +24,7 @@
             <a class="btn btn-default" href="#" role="button" onclick="toggleApp1();">Sum it !</a>
             <a class="btn btn-default" href="#" role="button" onclick="toggleApp2();">Min it !</a>
             <a class="btn btn-default" href="#" role="button" onclick="toggleLogin();">Login !</a>
+            <a class="btn btn-default" href="#" role="button" onclick="toggleRefresh();">Refresh token !</a>
 
         </p>
     </div>
@@ -50,6 +51,21 @@
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" id="btn-login"
                         class="btn btn-primary btn-lg">Login !
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="refreshForm" class="container">
+    <h2>Login</h2>
+    <br>
+    <form class="form-horizontal" id="refresh-form">
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="btn-refresh"
+                        class="btn btn-primary btn-lg">Refresh Token !
                 </button>
             </div>
         </div>
@@ -124,6 +140,7 @@
         $("#app1Form").hide();
         $("#app2Form").hide();
         $("#loginForm").hide();
+        $("#refreshForm").hide();
 
         $("#app1Form").submit(function (event) {
             enableSumButton(false);
@@ -150,6 +167,12 @@
 
             login();
         })
+        $("#refreshForm").submit(function (event) {
+            enableRefreshButton(false);
+            event.preventDefault();
+
+            refresh();
+        })
     });
     function enableSumButton(flag) {
         $("#btn-sum").prop("enabled", flag);
@@ -159,6 +182,9 @@
     }
     function enableMinButton(flag) {
         $("#btn-min").prop("enabled", flag);
+    }
+    function enableRefreshButton(flag) {
+        $("#btn-refresh").prop("enabled", flag);
     }
     function sumApp1() {
         var url = '/oauth-app1/sum/' + $('#sum1').val() + '/' + $('#sum2').val();
@@ -191,6 +217,9 @@
             type: 'GET',
             contentType: 'application/json',
             async: false,
+            headers:{
+                'Authorization': 'Bearer ' + accessToken
+            },
             url: url
 
         }).done(function (data) {
@@ -235,8 +264,8 @@
             console.log("SUCCESS: ", data);
             display(data);
             enableLoginButton(true);
-            accessToken = data.accessToken;
-            refreshToken = data.refreshToken;
+            store(data);
+
 
         }).fail(function(xhr) {
             alert("Wrong username of password");
@@ -244,6 +273,43 @@
         });
     }
 
+    function refresh() {
+
+        var url = "/oauth-server/oauth/token";
+        var applicationSecret = 'web1:password';
+        applicationSecret = window.btoa(applicationSecret);
+
+        var data = {
+            'grant_type' : 'refresh_token',
+            'refresh_token' : refreshToken
+        }
+        $.ajax({
+            data: data,
+            timeout: 1000,
+            type: 'POST',
+            dataType: 'json',
+            headers:{
+                'Authorization': 'Basic ' + applicationSecret
+            },
+            url: url
+
+        }).done(function(data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+            enableLoginButton(true);
+            store(data);
+
+
+        }).fail(function(xhr) {
+            alert("Wrong username of password");
+            console.error('Wrong username of password (' + xhr.status + ')');
+        });
+    }
+
+    function store(data) {
+        accessToken = data.access_token;
+        refreshToken = data.refresh_token;
+    }
     function display(data) {
         var json = "<h4>Ajax Response</h4><pre>"
                 + JSON.stringify(data, null, 4) + "</pre>";
@@ -254,16 +320,25 @@
         $("#app1Form").show();
         $("#app2Form").hide();
         $("#loginForm").hide();
+        $("#refreshForm").hide();
     }
     function toggleApp2() {
         $("#app2Form").show();
         $("#app1Form").hide();
         $("#loginForm").hide();
+        $("#refreshForm").hide();
     }
     function toggleLogin() {
         $("#app2Form").hide();
         $("#app1Form").hide();
         $("#loginForm").show();
+        $("#refreshForm").hide();
+    }
+    function toggleRefresh() {
+        $("#app2Form").hide();
+        $("#app1Form").hide();
+        $("#loginForm").hide();
+        $("#refreshForm").show();
     }
 </script>
 

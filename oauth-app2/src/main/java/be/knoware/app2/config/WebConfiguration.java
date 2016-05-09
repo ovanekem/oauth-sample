@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan("be.knoware.be.knoware.app2.controller")
+@ComponentScan("be.knoware.app2.controller")
 public class WebConfiguration extends WebMvcConfigurerAdapter{
 
 }
