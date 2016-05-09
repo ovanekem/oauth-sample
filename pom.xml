@@ -14,6 +14,7 @@
         <module>oauth-app1</module>
         <module>oauth-app2</module>
         <module>oauth-client</module>
+        <module>oauth-client2</module>
     </modules>
     <properties>
         <java.version>1.7</java.version>

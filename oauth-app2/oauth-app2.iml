@@ -12,6 +12,16 @@
         </sourceRoots>
       </configuration>
     </facet>
+    <facet type="Spring" name="Spring">
+      <configuration>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/java/be/knoware/app2/config/WebConfiguration.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/be/knoware/app2/config/OAuth2ResourceServerConfiguration.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/be/knoware/app2/config/ResourceServerApplication.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/be/knoware/app2/config/MethodSecurityConfig.java</file>
+        </fileset>
+      </configuration>
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />

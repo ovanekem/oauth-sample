@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Knoware ATLAS OAUTH POC</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">ATLAS OAUTH POC</a>
+        </div>
+    </div>
+</nav>
+
+
+<div class="jumbotron">
+    <div class="container">
+        <h2>Welcome to the ATLAS OAUTH POC</h2>
+        <h3>Choose one of the actions below...</h3>
+        <p>
+            <a class="btn btn-default" href="#" role="button" onclick="toggleApp1();">Sum it !</a>
+            <a class="btn btn-default" href="#" role="button" onclick="toggleApp2();">Min it !</a>
+            <a class="btn btn-default" href="#" role="button" onclick="toggleLogin();">Login !</a>
+            <a class="btn btn-default" href="#" role="button" onclick="toggleRefresh();">Refresh token !</a>
+
+        </p>
+    </div>
+</div>
+
+<div id="loginForm" class="container">
+    <h2>Login</h2>
+    <br>
+    <form class="form-horizontal" id="login-form">
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">User name</label>
+            <div class="col-sm-10">
+                <input type=text class="form-control" id="username">
+            </div>
+        </div>
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-10">
+                <input type=password class="form-control" id="password">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="btn-login"
+                        class="btn btn-primary btn-lg">Login !
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="refreshForm" class="container">
+    <h2>Login</h2>
+    <br>
+    <form class="form-horizontal" id="refresh-form">
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="btn-refresh"
+                        class="btn btn-primary btn-lg">Refresh Token !
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="app1Form" class="container">
+    <h2>Sum 2 numbers</h2>
+    <br>
+
+    <form class="form-horizontal" id="sum-form">
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Number 1</label>
+            <div class="col-sm-10">
+                <input type=text class="form-control" id="sum1">
+            </div>
+        </div>
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Number 2</label>
+            <div class="col-sm-10">
+                <input type=text class="form-control" id="sum2">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="btn-sum"
+                        class="btn btn-primary btn-lg">Sum it !
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div id="app2Form" class="container">
+    <h2>Min 2 numbers</h2>
+    <br>
+
+    <form class="form-horizontal" id="min-form">
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Number 1</label>
+            <div class="col-sm-10">
+                <input type=text class="form-control" id="min1">
+            </div>
+        </div>
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Number 2</label>
+            <div class="col-sm-10">
+                <input type=text class="form-control" id="min2">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="btn-min"
+                        class="btn btn-primary btn-lg">Min it !
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div id="result"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script type="application/javascript">
+    var clientApp = 'web2';
+    var clientSecret = 'password';
+    var accessToken = '';
+    var refreshToken = '';
+
+    $(document).ready(function () {
+        $("#app1Form").hide();
+        $("#app2Form").hide();
+        $("#loginForm").hide();
+        $("#refreshForm").hide();
+
+        $("#app1Form").submit(function (event) {
+            enableSumButton(false);
+
+
+            // Prevent the form from submitting via the browser.
+            event.preventDefault();
+
+            sumApp1();
+
+        });
+        $("#app2Form").submit(function (event) {
+            enableMinButton(false);
+
+            // Prevent the form from submitting via the browser.
+            event.preventDefault();
+
+            minApp2();
+
+        });
+        $("#loginForm").submit(function (event) {
+            enableLoginButton(false);
+            event.preventDefault();
+
+            login();
+        })
+        $("#refreshForm").submit(function (event) {
+            enableRefreshButton(false);
+            event.preventDefault();
+
+            refresh();
+        })
+    });
+    function enableSumButton(flag) {
+        $("#btn-sum").prop("enabled", flag);
+    }
+    function enableLoginButton(flag) {
+        $("#btn-login").prop("enabled", flag);
+    }
+    function enableMinButton(flag) {
+        $("#btn-min").prop("enabled", flag);
+    }
+    function enableRefreshButton(flag) {
+        $("#btn-refresh").prop("enabled", flag);
+    }
+    function sumApp1() {
+        var url = '/oauth-app1/sum/' + $('#sum1').val() + '/' + $('#sum2').val();
+
+        $.ajax({
+            type: 'GET',
+            contentType: 'application/json',
+            async: false,
+            headers:{
+                'Authorization': 'Bearer ' + accessToken
+            },
+            url: url
+
+        }).done(function (data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+            enableSumButton(true);
+        }).fail(function (xhr) {
+            if (xhr.status === 401) {
+                alert("You should login first...");
+
+            } else {
+                alert('Error, bad HTTP error code returned: ' + xhr.status);
+            }
+        });
+    }
+    function minApp2() {
+        var url = '/oauth-app2/min/' + $('#min1').val() + '/' + $('#min2').val();
+
+        $.ajax({
+            type: 'GET',
+            contentType: 'application/json',
+            async: false,
+            headers:{
+                'Authorization': 'Bearer ' + accessToken
+            },
+            url: url
+
+        }).done(function (data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+            enableMinButton(true);
+        }).fail(function (xhr) {
+            if (xhr.status === 401) {
+                alert("You should login first...");
+
+            } else {
+                alert('Error, bad HTTP error code returned: ' + xhr.status);
+            }
+        });
+    }
+
+
+    function login() {
+
+        var url = "/oauth-server/oauth/token";
+        var applicationSecret = clientApp + ':' + clientSecret;
+        applicationSecret = window.btoa(applicationSecret);
+
+        var data = {
+            'grant_type' : 'password',
+            'username' : $('#username').val(),
+            'password' : $('#password').val()
+        }
+        $.ajax({
+            data: data,
+            timeout: 1000,
+            type: 'POST',
+            dataType: 'json',
+            headers:{
+                'Authorization': 'Basic ' + applicationSecret
+            },
+            url: url
+
+        }).done(function(data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+            enableLoginButton(true);
+            store(data);
+
+
+        }).fail(function(xhr) {
+            alert("Wrong username of password");
+            console.error('Wrong username of password (' + xhr.status + ')');
+        });
+    }
+
+    function refresh() {
+
+        var url = "/oauth-server/oauth/token";
+        var applicationSecret = clientApp + ':' + clientSecret;
+        applicationSecret = window.btoa(applicationSecret);
+
+        var data = {
+            'grant_type' : 'refresh_token',
+            'refresh_token' : refreshToken
+        }
+        $.ajax({
+            data: data,
+            timeout: 1000,
+            type: 'POST',
+            dataType: 'json',
+            headers:{
+                'Authorization': 'Basic ' + applicationSecret
+            },
+            url: url
+
+        }).done(function(data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+            enableLoginButton(true);
+            store(data);
+
+
+        }).fail(function(xhr) {
+            alert("Wrong username of password");
+            console.error('Wrong username of password (' + xhr.status + ')');
+        });
+    }
+
+    function store(data) {
+        accessToken = data.access_token;
+        refreshToken = data.refresh_token;
+    }
+    function display(data) {
+        var json = "<h4>Ajax Response</h4><pre>"
+                + JSON.stringify(data, null, 4) + "</pre>";
+        $('#result').html(json);
+    }
+
+    function toggleApp1() {
+        $("#app1Form").show();
+        $("#app2Form").hide();
+        $("#loginForm").hide();
+        $("#refreshForm").hide();
+    }
+    function toggleApp2() {
+        $("#app2Form").show();
+        $("#app1Form").hide();
+        $("#loginForm").hide();
+        $("#refreshForm").hide();
+    }
+    function toggleLogin() {
+        $("#app2Form").hide();
+        $("#app1Form").hide();
+        $("#loginForm").show();
+        $("#refreshForm").hide();
+    }
+    function toggleRefresh() {
+        $("#app2Form").hide();
+        $("#app1Form").hide();
+        $("#loginForm").hide();
+        $("#refreshForm").show();
+    }
+</script>
+
+</body>
+</html>

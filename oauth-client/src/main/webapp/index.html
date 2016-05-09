@@ -136,6 +136,11 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 <script type="application/javascript">
+    var clientApp = 'web1';
+    var clientSecret = 'password';
+    var accessToken = '';
+    var refreshToken = '';
+
     $(document).ready(function () {
         $("#app1Form").hide();
         $("#app2Form").hide();
@@ -193,20 +198,21 @@
             type: 'GET',
             contentType: 'application/json',
             async: false,
+            headers:{
+                'Authorization': 'Bearer ' + accessToken
+            },
             url: url
 
         }).done(function (data) {
             console.log("SUCCESS: ", data);
             display(data);
             enableSumButton(true);
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            if (jqXHR.status === 401) { // HTTP Status 401: Unauthorized
-                var preLoginInfo = JSON.stringify({method: 'GET', url: '/'});
-                $.cookie('restsecurity.pre.login.request', preLoginInfo);
-                window.location = '/login.html';
+        }).fail(function (xhr) {
+            if (xhr.status === 401) {
+                alert("You should login first...");
 
             } else {
-                alert('Houston, we have a problem...');
+                alert('Error, bad HTTP error code returned: ' + xhr.status);
             }
         });
     }
@@ -227,7 +233,7 @@
             display(data);
             enableMinButton(true);
         }).fail(function (xhr) {
-            if (xhr.status === 401) { // HTTP Status 401: Unauthorized
+            if (xhr.status === 401) {
                 alert("You should login first...");
 
             } else {
@@ -236,13 +242,11 @@
         });
     }
 
-    var accessToken = '';
-    var refreshToken = '';
 
     function login() {
 
         var url = "/oauth-server/oauth/token";
-        var applicationSecret = 'web1:password';
+        var applicationSecret = clientApp + ':' + clientSecret;
         applicationSecret = window.btoa(applicationSecret);
 
         var data = {
@@ -276,7 +280,7 @@
     function refresh() {
 
         var url = "/oauth-server/oauth/token";
-        var applicationSecret = 'web1:password';
+        var applicationSecret = clientApp + ':' + clientSecret;
         applicationSecret = window.btoa(applicationSecret);
 
         var data = {
