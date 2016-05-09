@@ -6,5 +6,12 @@ services:
         - "80:8080"
         - "9990:9990"
         - "8787:8787"
-
+    oauth-db:
+      image: mysql
+      ports:
+        - "3306:3306"
+      environment:
+        - "MYSQL_ROOT_PASSWORD=knoware"
+        - "MYSQL_USER=knoware"
+        - "MYSQL_PASSWORD=knoware"
 

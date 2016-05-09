@@ -11,26 +11,25 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 /**
  * Created by ovanekem on 03/05/16.
  */
-public class WebSecurityConfiguration {
-    @Configuration
-    public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-        @Autowired
-        public void globalUserDetails(final AuthenticationManagerBuilder auth) throws Exception {
-            auth.inMemoryAuthentication().withUser("olivier").password("knoware").roles("ROLE_USER,ROLE_ADMIN").
-                    and().withUser("user").password("password").roles("ROLE_USER");
-        }
-
-        @Override
-        @Bean
-        public AuthenticationManager authenticationManagerBean() throws Exception {
-            return super.authenticationManagerBean();
-        }
-
-        @Override
-        protected void configure(final HttpSecurity http) throws Exception {
-            http.authorizeRequests().antMatchers("/login").permitAll();
-            http.formLogin();
-        }
+    @Autowired
+    public void globalUserDetails(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication().withUser("olivier").password("knoware").roles("USER,ADMIN").
+                and().withUser("user").password("password").roles("USER");
     }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(final HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/login").permitAll().anyRequest().authenticated()
+                .and().formLogin().permitAll();
+    }
+
 }

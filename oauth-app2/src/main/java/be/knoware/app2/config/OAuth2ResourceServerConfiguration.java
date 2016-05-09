@@ -21,7 +21,8 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and().authorizeRequests().anyRequest().authenticated();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and()
+                .authorizeRequests().anyRequest().authenticated();
 
     }
 

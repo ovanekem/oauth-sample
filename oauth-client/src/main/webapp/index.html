@@ -207,20 +207,36 @@
         });
     }
 
+    var accessToken = '';
+    var refreshToken = '';
+
     function login() {
 
-        var url = "/oauth-server/login";
-        var data = 'username=' + $('#username').val() + '&password=' + $('#password').val();
+        var url = "/oauth-server/oauth/token";
+        var applicationSecret = 'web1:password';
+        applicationSecret = window.btoa(applicationSecret);
+
+        var data = {
+            'grant_type' : 'password',
+            'username' : $('#username').val(),
+            'password' : $('#password').val()
+        }
         $.ajax({
             data: data,
             timeout: 1000,
             type: 'POST',
+            dataType: 'json',
+            headers:{
+                'Authorization': 'Basic ' + applicationSecret
+            },
             url: url
 
         }).done(function(data) {
             console.log("SUCCESS: ", data);
             display(data);
             enableLoginButton(true);
+            accessToken = data.accessToken;
+            refreshToken = data.refreshToken;
 
         }).fail(function(xhr) {
             alert("Wrong username of password");
