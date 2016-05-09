@@ -7,7 +7,7 @@ public class Calc {
 
     private int a;
     private int b;
-    private int sum;
+    private int result;
 
     public Calc(int a, int b) {
         this.a = a;
@@ -15,7 +15,7 @@ public class Calc {
     }
 
     public void sumAandB() {
-        sum = a + b;
+        result = a + b;
     }
 
 
@@ -35,11 +35,11 @@ public class Calc {
         this.b = b;
     }
 
-    public int getSum() {
-        return sum;
+    public int getResult() {
+        return result;
     }
 
-    public void setSum(int sum) {
-        this.sum = sum;
+    public void setResult(int result) {
+        this.result = result;
     }
 }

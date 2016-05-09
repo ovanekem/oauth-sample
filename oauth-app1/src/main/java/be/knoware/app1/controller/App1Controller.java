@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.security.Principal;
+
 /**
  * Created by ovanekem on 03/05/16.
  */
@@ -21,6 +23,16 @@ public class App1Controller {
         // complex business logic ;-)
         Calc calc = new Calc(a, b);
         calc.sumAandB();
+        return calc;
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(method = RequestMethod.GET, value = "/times/{a}/{b}")
+    @ResponseBody
+    public Calc times(@PathVariable int a, @PathVariable int b, Principal principal) {
+        // complex business logic ;-)
+        Calc calc = new Calc(a, b);
+        calc.setResult(a * b);
         return calc;
     }
 }

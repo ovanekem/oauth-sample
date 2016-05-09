@@ -10,7 +10,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">ATLAS OAUTH POC</a>
+            <a class="navbar-brand" href="#">ATLAS OAUTH POC (CLIENT 1)</a>
         </div>
     </div>
 </nav>
@@ -18,10 +18,11 @@
 
 <div class="jumbotron">
     <div class="container">
-        <h2>Welcome to the ATLAS OAUTH POC</h2>
+        <h2>Welcome to the ATLAS OAUTH POC (CLIENT 1)</h2>
         <h3>Choose one of the actions below...</h3>
         <p>
             <a class="btn btn-default" href="#" role="button" onclick="toggleApp1();">Sum it !</a>
+            <a class="btn btn-default" href="#" role="button" onclick="toggleTimes();">Times it !</a>
             <a class="btn btn-default" href="#" role="button" onclick="toggleApp2();">Min it !</a>
             <a class="btn btn-default" href="#" role="button" onclick="toggleLogin();">Login !</a>
             <a class="btn btn-default" href="#" role="button" onclick="toggleRefresh();">Refresh token !</a>
@@ -101,6 +102,35 @@
 
 </div>
 
+<div id="timesForm" class="container">
+    <h2>Times 2 numbers</h2>
+    <br>
+
+    <form class="form-horizontal" id="times-form">
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Number 1</label>
+            <div class="col-sm-10">
+                <input type=text class="form-control" id="times1">
+            </div>
+        </div>
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Number 2</label>
+            <div class="col-sm-10">
+                <input type=text class="form-control" id="times2">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="btn-times"
+                        class="btn btn-primary btn-lg">Times it !
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
 <div id="app2Form" class="container">
     <h2>Min 2 numbers</h2>
     <br>
@@ -146,6 +176,7 @@
         $("#app2Form").hide();
         $("#loginForm").hide();
         $("#refreshForm").hide();
+        $("#timesForm").hide();
 
         $("#app1Form").submit(function (event) {
             enableSumButton(false);
@@ -155,6 +186,16 @@
             event.preventDefault();
 
             sumApp1();
+
+        });
+        $("#timesForm").submit(function (event) {
+            enableSumButton(false);
+
+
+            // Prevent the form from submitting via the browser.
+            event.preventDefault();
+
+            timesApp1();
 
         });
         $("#app2Form").submit(function (event) {
@@ -179,6 +220,9 @@
             refresh();
         })
     });
+    function enableTimesButton(flag) {
+        $("#btn-times").prop("enabled", flag);
+    }
     function enableSumButton(flag) {
         $("#btn-sum").prop("enabled", flag);
     }
@@ -193,6 +237,31 @@
     }
     function sumApp1() {
         var url = '/oauth-app1/sum/' + $('#sum1').val() + '/' + $('#sum2').val();
+
+        $.ajax({
+            type: 'GET',
+            contentType: 'application/json',
+            async: false,
+            headers:{
+                'Authorization': 'Bearer ' + accessToken
+            },
+            url: url
+
+        }).done(function (data) {
+            console.log("SUCCESS: ", data);
+            display(data);
+            enableSumButton(true);
+        }).fail(function (xhr) {
+            if (xhr.status === 401) {
+                alert("You should login first...");
+
+            } else {
+                alert('Error, bad HTTP error code returned: ' + xhr.status);
+            }
+        });
+    }
+    function timesApp1() {
+        var url = '/oauth-app1/times/' + $('#times1').val() + '/' + $('#times2').val();
 
         $.ajax({
             type: 'GET',
@@ -325,24 +394,35 @@
         $("#app2Form").hide();
         $("#loginForm").hide();
         $("#refreshForm").hide();
+        $("#timesForm").hide();
     }
     function toggleApp2() {
         $("#app2Form").show();
         $("#app1Form").hide();
         $("#loginForm").hide();
         $("#refreshForm").hide();
+        $("#timesForm").hide();
     }
     function toggleLogin() {
         $("#app2Form").hide();
         $("#app1Form").hide();
         $("#loginForm").show();
         $("#refreshForm").hide();
+        $("#timesForm").hide();
     }
     function toggleRefresh() {
         $("#app2Form").hide();
         $("#app1Form").hide();
         $("#loginForm").hide();
         $("#refreshForm").show();
+        $("#timesForm").hide();
+    }
+    function toggleTimes() {
+        $("#app2Form").hide();
+        $("#app1Form").hide();
+        $("#loginForm").hide();
+        $("#refreshForm").hide();
+        $("#timesForm").show();
     }
 </script>
 
